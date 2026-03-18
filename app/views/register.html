@@ -1,31 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Secure Shop - Inscription</title>
-    <link rel="stylesheet" href="/css/main.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
     <div id="topbar"></div>
 
     <main>
-        <section class="hero">
-            <div class="container">
-                <h1>Inscription</h1>
+      <section class="hero">
+        <div class="container">
+          <h1>Inscription</h1>
 
-                <p>Placer un formulaire d'inscription ici</p>
-
+          <form class="login-form">
+            <div class="form-group">
+              <label for="username">Nom d'utilisateur</label>
+              <input type="text" id="username" name="username" required />
             </div>
-        </section>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Mot de passe</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+
+            <div class="form-group">
+              <label for="address">Adresse</label>
+              <input type="text" id="address" name="address" />
+            </div>
+
+            <div class="form-group">
+              <label for="profile-pic">Photo de profil</label>
+              <input
+                type="file"
+                id="profile-pic"
+                name="profile-pic"
+                accept="image/*"
+              />
+            </div>
+
+            <button type="submit" class="btn">Créer un compte</button>
+          </form>
+        </div>
+      </section>
     </main>
 
     <footer id="contact" class="footer">
-        <div class="container">
-            <p>Projet pedagogique - ETML 183</p>
-        </div>
+      <div class="container">
+        <p>Projet pedagogique - ETML 183</p>
+      </div>
     </footer>
 
     <script src="/js/nav.js"></script>
-</body>
+  </body>
 </html>
