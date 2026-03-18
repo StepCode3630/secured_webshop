@@ -1,9 +1,9 @@
 // Navigation commune à toutes les pages
 // Pour modifier le menu, éditer uniquement ce fichier
-document.addEventListener('DOMContentLoaded', () => {
-    const nav = document.getElementById('topbar');
-    if (!nav) return;
-    nav.innerHTML = `
+document.addEventListener("DOMContentLoaded", () => {
+  const nav = document.getElementById("topbar");
+  if (!nav) return;
+  nav.innerHTML = `
         <header class="topbar">
             <div class="container">
                 <div class="brand">Secure Shop</div>
