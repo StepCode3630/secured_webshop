@@ -56,46 +56,10 @@
 
     <script src="/js/nav.js"></script>
     <script src="/js/main.js"></script>
+
+    <!-- Mount App -->
     <script>
-      const { createApp } = Vue;
-      createApp({
-        data() {
-          return {
-            email: "",
-            password: "",
-            errorMessage: "",
-            successMessage: "",
-          };
-        },
-        methods: {
-          async handleSubmit() {
-            const apiUrl = "http://localhost:3000/api/login";
-            try {
-              const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  email: this.email,
-                  password: this.password,
-                }),
-              });
-              const data = await response.json();
-              if (data.success) {
-                alert("Connexion réussie !");
-                this.errorMessage = "";
-              } else {
-                alert("Identifiants incorrects.");
-                this.errorMessage = "Identifiants incorrects.";
-              }
-            } catch (error) {
-              console.error("Erreur lors de la connexion :", error);
-              alert("Une erreur est survenue. Veuillez réessayer.");
-            }
-          },
-        },
-      }).mount("#app");
+      const mountedApp = app.mount("#app");
     </script>
   </body>
 </html>
