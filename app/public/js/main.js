@@ -8,6 +8,7 @@ const app = Vue.createApp({
     };
   },
   methods: {
+    //Send login request to API
     async handleSubmit() {
       const apiUrl = "/api/auth/login";
       try {
@@ -26,8 +27,14 @@ const app = Vue.createApp({
         if (response.ok) {
           this.successMessage = data.message;
           this.errorMessage = "";
-          // Redirect or something
-          window.location.href = "/profile"; // assuming after login go to profile
+          const user = data.user;
+          console.log("Utilisateur connecté :", user, user && user.id);
+          if (user && user.id) {
+            localStorage.setItem("user", JSON.stringify(user));
+            window.location.href = `/profile?id=${encodeURIComponent(user.id)}`;
+          } else {
+            window.location.href = "/profile";
+          }
         } else {
           this.errorMessage = data.error;
           this.successMessage = "";
