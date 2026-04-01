@@ -17,11 +17,9 @@ const upload = multer({ storage });
 router.post("/login", controller.login);
 router.post("/register", upload.single("photo"), controller.register);
 
-module.exports = router;
-
 const argon2 = require("argon2");
 
-export async function hashPassword(password) {
+async function hashPassword(password) {
   try {
     const hash = await argon2.hash(password, {
       type: argon2.argon2id,
@@ -35,14 +33,16 @@ export async function hashPassword(password) {
   }
 }
 
-export async function verifyPassword(hash, password) {
+async function verifyPassword(hash, password) {
   try {
-    if (await argon2.verify(hash, password)) {
-      console.log("Password is correct");
-    } else {
-      console.log("Password is incorrect");
-    }
+    const valid = await argon2.verify(hash, password);
+    return valid;
   } catch (err) {
     console.error(err);
+    throw err;
   }
 }
+
+module.exports = router;
+module.exports.hashPassword = hashPassword;
+module.exports.verifyPassword = verifyPassword;
