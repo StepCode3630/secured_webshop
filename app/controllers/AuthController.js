@@ -12,28 +12,39 @@ module.exports = {
       return res.status(400).json({ error: "Email et mot de passe requis" });
     }
 
-    const query = `SELECT * FROM users WHERE email = '${email}' AND password = '${await hashPassword(password)}'`;
+    // Empeche une injection SQL en utilisant des requetes préparées
+    const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
 
-    db.query(query, async (err, results) => {
-      if (err) {
-        return res.status(500).json({ error: err.message, query: query });
-      }
-
-      if (results.length === 0) {
-        return res.status(401).json({ error: "Email ou mot de passe incorrect" });
-      }
-
-      const user = results[0];
-      try {
-        const valid = await verifyPassword(user.password, password);
-        if (!valid) {
-          return res.status(401).json({ error: "Email ou mot de passe incorrect" });
+    db.query(
+      query,
+      [email, await hashPassword(password)],
+      async (err, results) => {
+        if (err) {
+          return res.status(500).json({ error: err.message, query: query });
         }
-        res.json({ message: "Connexion réussie", user });
-      } catch (verifyErr) {
-        return res.status(500).json({ error: "Erreur de vérification du mot de passe" });
-      }
-    });
+
+        if (results.length === 0) {
+          return res
+            .status(401)
+            .json({ error: "Email ou mot de passe incorrect" });
+        }
+
+        const user = results[0];
+        try {
+          const valid = await verifyPassword(user.password, password);
+          if (!valid) {
+            return res
+              .status(401)
+              .json({ error: "Email ou mot de passe incorrect" });
+          }
+          res.json({ message: "Connexion réussie", user });
+        } catch (verifyErr) {
+          return res
+            .status(500)
+            .json({ error: "Erreur de vérification du mot de passe" });
+        }
+      },
+    );
   },
 
   // ----------------------------------------------------------
@@ -57,6 +68,7 @@ module.exports = {
     }
 
     const photoPath = photo ? "/uploads/" + photo.filename : null;
+    //Empeche une injection SQL en utilisant des requetes préparées
     const query = `INSERT INTO users (username, email, password, address, photo_path) VALUES (?, ?, ?, ?, ?)`;
     db.query(
       query,
