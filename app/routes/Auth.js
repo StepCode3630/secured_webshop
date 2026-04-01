@@ -22,6 +22,7 @@ const argon2 = require("argon2");
 async function hashPassword(password) {
   try {
     const hash = await argon2.hash(password, {
+      //Argon gère deja le salt
       type: argon2.argon2id,
       timeCost: 4,
       memoryCost: 2 ** 16,
@@ -30,6 +31,7 @@ async function hashPassword(password) {
     return hash;
   } catch (err) {
     console.error(err);
+    throw err;
   }
 }
 
