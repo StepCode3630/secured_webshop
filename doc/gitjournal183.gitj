@@ -4,5 +4,16 @@
   "branch": "main",
   "me": "StepCode3630",
   "journalStartDate": null,
-  "exceptions": []
+  "exceptions": [
+    {
+      "id": "ac363ee3-62e3-4f93-bbd5-a002923ac3ad",
+      "type": "commitless",
+      "name": "chore: création de clé pour pouvoir signer mes commit",
+      "description": "",
+      "date": "2026-04-01T10:45",
+      "duration": 45,
+      "status": "DONE",
+      "author": "StepCode3630"
+    }
+  ]
 }
