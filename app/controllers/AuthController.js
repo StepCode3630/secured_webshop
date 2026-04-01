@@ -14,7 +14,7 @@ module.exports = {
 
     const query = `SELECT * FROM users WHERE email = '${email}' AND password = '${await hashPassword(password)}'`;
 
-    db.query(query, (err, results) => {
+    db.query(query, async (err, results) => {
       if (err) {
         return res.status(500).json({ error: err.message, query: query });
       }
