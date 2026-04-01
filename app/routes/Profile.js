@@ -18,4 +18,6 @@ router.get("/:id?", controller.get);
 router.post("/:id", controller.update);
 router.post("/:id/photo", upload.single("photo"), controller.uploadPhoto);
 
+app.get()
+
 module.exports = router;

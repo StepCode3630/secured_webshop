@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const { hashPassword, verifyPassword } = require("../routes/Auth");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   // ----------------------------------------------------------
@@ -43,6 +44,36 @@ module.exports = {
             .status(500)
             .json({ error: "Erreur de vérification du mot de passe" });
         }
+
+        // Générer un JWT pour l'authentification future
+        const token = jwt.sign(
+          {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: process.env.JWT_EXPIRES_IN },
+        );
+
+        // Envoie le token et les infos utilisateur (sans le mot de passe) au client (naviguateur)
+        res.cookie("token", token, {
+          httpOnly: true, // Empêche l'accès au token via JavaScript côté client contre les attaques XSS
+          secure: true, // Assure que le cookie est envoyé uniquement sur HTTPS
+          sameSite: "Strict", // Empêche le cookie d'être envoyé dans les requêtes cross-site contre les attaques CSRF
+          maxAge: process.env.JWT_EXPIRES_IN, // Durée de vie du cookie
+        });
+
+        res.json({
+          message: "Connexion réussie",
+          user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+          },
+        });
       },
     );
   },
