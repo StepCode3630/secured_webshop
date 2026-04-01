@@ -2,6 +2,7 @@
   "name": "mon_application",
   "version": "1.0.0",
   "description": "Une application Node.js",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js -L"
