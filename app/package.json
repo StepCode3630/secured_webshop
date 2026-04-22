@@ -2,7 +2,7 @@
   "name": "mon_application",
   "version": "1.0.0",
   "description": "Une application Node.js",
-  "type": "commonjs",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js -L"
@@ -11,10 +11,15 @@
     "argon2": "^0.44.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.6.1",
-    "express": "^4.19.1",
+    "express": "^4.22.1",
+    "jose": "^6.2.2",
     "jsonwebtoken": "^9.0.3",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.9.4",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.22.2",
     "nodemon": "^3.1.0"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
