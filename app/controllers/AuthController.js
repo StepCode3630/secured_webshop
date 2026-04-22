@@ -6,58 +6,70 @@ import { SignJWT } from "jose";
 // POST /api/auth/login
 // ----------------------------------------------------------
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email et mot de passe requis" });
-  }
+    console.log("LOGIN START", { email });
 
-  // Empeche une injection SQL en utilisant des requetes préparées
-  const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
+    if (!email || !password) {
+      console.log("STEP 1");
+      return res.status(400).json({ error: "Email et mot de passe requis" });
+    }
 
-  db.query(
-    query,
-    [email, await hashPassword(password)],
-    async (err, results) => {
+    const query = "SELECT * FROM users WHERE email = ?";
+
+    db.query(query, [email], async (err, results) => {
       if (err) {
-        return res.status(500).json({ error: err.message, query: query });
+        console.log("DB ERROR:", err);
+        return res.status(500).json({ error: err.message });
       }
 
+      console.log("STEP 2 - USER QUERY DONE");
+
       if (results.length === 0) {
-        return res
-          .status(401)
-          .json({ error: "Email ou mot de passe incorrect" });
+        console.log("NO USER FOUND");
+        return res.status(401).json({ error: "Identifiants invalides" });
       }
 
       const user = results[0];
-      try {
-        const valid = await verifyPassword(user.password, password);
-        if (!valid) {
-          return res
-            .status(401)
-            .json({ error: "Email ou mot de passe incorrect" });
-        }
-        // Générer un JWT pour l'authentification future
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-        // Utiliser la bibliothèque jose pour générer un JWT
-        const token = await new SignJWT({ role: "user" })
-          .setProtectedHeader({ alg: "HS256" })
-          .setSubject(String(user.id))
-          .setIssuedAt()
-          .setExpirationTime("15m")
-          .sign(secret);
+      console.log("User object:", user);
+      console.log("Provided password:", password);
 
-        console.log("Token généré:", token);
+      const valid = await verifyPassword(password, user.password);
 
-        res.json({ message: "Connexion réussie", user, token });
-      } catch (verifyErr) {
-        return res
-          .status(500)
-          .json({ error: "Erreur de vérification du mot de passe" });
+      console.log("PASSWORD VALID:", valid);
+
+      if (!valid) {
+        console.log("STEP 3 - INVALID PASSWORD");
+        return res.status(401).json({ error: "Identifiants invalides" });
       }
-    },
-  );
+
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+      const token = await new SignJWT({ role: user.role })
+        .setProtectedHeader({ alg: "HS256" })
+        .setSubject(String(user.id))
+        .setIssuedAt()
+        .setExpirationTime("15m")
+        .sign(secret);
+
+      console.log("TOKEN GENERATED");
+
+      return res.json({
+        message: "Connexion réussie",
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    });
+  } catch (err) {
+    console.error("LOGIN CRASH:", err);
+    return res.status(500).json({ error: "Server error" });
+  }
 };
 
 // ----------------------------------------------------------

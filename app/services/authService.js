@@ -1,3 +1,4 @@
+import argon2 from "argon2";
 // Pepper : constante secrète (idéalement dans .env)
 const PEPPER = process.env.PASSWORD_PEPPER;
 

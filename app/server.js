@@ -1,19 +1,21 @@
 import dotenv from "dotenv";
 import path from "path";
-import express from "express";
-import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 
-console.log("SERVER FILE EXECUTED");
-console.log("PID SERVER:", process.pid);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-dotenv.config();
+dotenv.config({
+  path: path.resolve(__dirname, "../.env"),
+});
+
+import cookieParser from "cookie-parser";
+import express from "express";
+
 const app = express();
 app.use(express.json());
-const secret = process.env.JWT_SECRET;
-const PORT = 8080;
-
-app.listen(8080, () => {
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
   console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
 
@@ -23,10 +25,6 @@ app.use(cookieParser());
 // Middleware pour parser le corps des requêtes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Fichiers statiques (CSS, images, uploads...)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "public")));
 

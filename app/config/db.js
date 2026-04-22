@@ -2,7 +2,7 @@ import mysql from "mysql2";
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST || "localhost",
-  port: process.env.DB_PORT || 6033,
+  port: process.env.DB_PORT,
   user: process.env.DB_USER || "db_user",
   password: process.env.DB_PASS || "db_password",
   database: process.env.DB_NAME || "webshop",
