@@ -1,12 +1,23 @@
-require("dotenv").config({ path: "../.env" });
+import dotenv from "dotenv";
+import path from "path";
+import express from "express";
+import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
 
-const express = require("express");
-const path = require("path");
+console.log("SERVER FILE EXECUTED");
+console.log("PID SERVER:", process.pid);
 
+dotenv.config();
 const app = express();
+app.use(express.json());
+const secret = process.env.JWT_SECRET;
+const PORT = 8080;
+
+app.listen(8080, () => {
+  console.log(`Serveur démarré sur http://localhost:${PORT}`);
+});
 
 // Middleware pour parser les cookies
-const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 // Middleware pour parser le corps des requêtes
@@ -14,14 +25,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Fichiers statiques (CSS, images, uploads...)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // ---------------------------------------------------------------
 // Routes API (retournent du JSON)
 // ---------------------------------------------------------------
-const authRoute = require("./routes/Auth");
-const profileRoute = require("./routes/Profile");
-const adminRoute = require("./routes/Admin");
+
+import authRoute from "./routes/Auth.js";
+import profileRoute from "./routes/Profile.js";
+import adminRoute from "./routes/Admin.js";
 
 app.use("/api/auth", authRoute);
 app.use("/api/profile", profileRoute);
@@ -30,8 +45,8 @@ app.use("/api/admin", adminRoute);
 // ---------------------------------------------------------------
 // Routes pages (retournent du HTML)
 // ---------------------------------------------------------------
-const homeRoute = require("./routes/Home");
-const userRoute = require("./routes/User");
+import { homeRoute } from "./routes/Home.js";
+import { userRoute } from "./routes/User.js";
 
 app.use("/", homeRoute);
 app.use("/user", userRoute);
@@ -51,6 +66,3 @@ app.get("/admin", (_req, res) =>
 
 // Démarrage du serveur
 app.get("/test", (_req, res) => res.send("db admin: root, pwd : root"));
-app.listen(8080, () => {
-  console.log("Serveur démarré sur http://localhost:8080");
-});

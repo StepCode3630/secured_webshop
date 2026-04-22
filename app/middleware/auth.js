@@ -1,13 +1,14 @@
 // =============================================================
 // Middleware d'authentification
 // =============================================================
+const jwt = require("jsonwebtoken");
 
 module.exports = (_req, _res, next) => {
   next();
-  const jwt = require("jsonwebtoken");
 
   function authenticateToken(req, res, next) {
-    const token = req.cookies.token; // Chope le token JWT depuis les cookies
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]; // Chope le token JWT depuis les cookies
 
     if (!token) {
       return res
@@ -15,14 +16,14 @@ module.exports = (_req, _res, next) => {
         .json({ error: "Token d'authentification manquant" });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         return res
           .status(403)
           .json({ error: "Token d'authentification invalide" });
       }
 
-      req.user = user; // Ajoute les infos utilisateur à la requête
+      req.user = decoded; // Ajoute les infos utilisateur à la requête
       next();
     });
   }
