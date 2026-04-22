@@ -1,8 +1,5 @@
-const path = require("path");
+import path from "path";
 
-module.exports = {
-    index: (req, res) => {
-        res.sendFile(path.join(__dirname, "..", "views", "home.html"));
-    }
+export const index = (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "views", "home.html"));
 };
-

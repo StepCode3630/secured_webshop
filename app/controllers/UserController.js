@@ -1,5 +1,3 @@
-module.exports = {
-    get: (req, res) => {
-        res.send("User: Sarah Test");
-    }
+export const get = (req, res) => {
+  res.send("User: Sarah Test");
 };

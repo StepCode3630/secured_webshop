@@ -1,7 +1,12 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import controller from "../controllers/AuthController.js";
+//Import de toute la logique métier d'authentification du controller auth
+import * as controller from "../controllers/AuthController.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const router = express.Router();
 
 // Configuration de multer pour l'upload de photos
@@ -17,5 +22,4 @@ const upload = multer({ storage });
 router.post("/login", controller.login);
 router.post("/register", upload.single("photo"), controller.register);
 
-
-module.exports = router;
+export default router;

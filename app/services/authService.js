@@ -1,7 +1,7 @@
 // Pepper : constante secrète (idéalement dans .env)
 const PEPPER = process.env.PASSWORD_PEPPER;
 
-async function hashPassword(password) {
+export async function hashPassword(password) {
   try {
     // Ajouter le pepper au mot de passe avant le hash
     const pepperPassword = password + PEPPER;
@@ -19,7 +19,7 @@ async function hashPassword(password) {
   }
 }
 
-async function verifyPassword(hash, password) {
+export async function verifyPassword(hash, password) {
   try {
     // Ajouter le même pepper avant vérification
     const pepperPassword = password + PEPPER;
@@ -30,8 +30,3 @@ async function verifyPassword(hash, password) {
     throw err;
   }
 }
-
-module.exports = {
-  hashPassword,
-  verifyPassword,
-};
