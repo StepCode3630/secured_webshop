@@ -26,12 +26,20 @@ const app = Vue.createApp({
     async handleRegister() {
       const apiUrl = "/api/auth/register";
 
-      // Validate password policy before sending
-      const rules = this.passwordRules;
+      const password = this.password;
+
+      const rules = {
+        length: password.length >= 8,
+        lower: /[a-z]/.test(password),
+        upper: /[A-Z]/.test(password),
+        digit: /[0-9]/.test(password),
+      };
+
       const meets = rules.length && rules.lower && rules.upper && rules.digit;
+
       if (!meets) {
         this.errorMessage =
-          "Le mot de passe ne respecte pas la politique minimale (8 caractères, minuscules, MAJUSCULES et chiffres).";
+          "Mot de passe faible (8+ caractères, majuscule, minuscule, chiffre).";
         this.successMessage = "";
         return;
       }
@@ -54,8 +62,6 @@ const app = Vue.createApp({
         if (res.ok) {
           this.successMessage = "Compte créé !";
           this.errorMessage = "";
-
-          // redirection
           window.location.href = "/login";
         } else {
           this.errorMessage = data.error;
@@ -84,9 +90,20 @@ const app = Vue.createApp({
       if (!password) {
         return {
           score: 0,
-          label: "Aucun",
+          label: "Aucun :(",
           color: "#ccc",
         };
+      }
+
+      if (
+        password.length > 16 &&
+        this.passwordRules.length &&
+        this.passwordRules.lower &&
+        this.passwordRules.upper &&
+        this.passwordRules.digit &&
+        this.passwordRules.special
+      ) {
+        return { label: "Divin", color: "#7b1abcff" };
       }
 
       const rules = [
@@ -105,6 +122,7 @@ const app = Vue.createApp({
         { label: "Moyen", color: "#ffd24d" },
         { label: "Bon", color: "#9acd32" },
         { label: "Fort", color: "#2ecc71" },
+        { label: "Excellent", color: "#27ae60" },
       ];
 
       return {

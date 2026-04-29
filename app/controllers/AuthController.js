@@ -1,5 +1,9 @@
 import db from "../config/db.js";
-import { hashPassword, verifyPassword } from "../services/authService.js";
+import {
+  hashPassword,
+  verifyPassword,
+  validatePassword,
+} from "../services/authService.js";
 import { SignJWT } from "jose";
 
 // ----------------------------------------------------------
@@ -78,11 +82,9 @@ export const register = async (req, res) => {
   const isValid = validatePassword(password);
 
   if (!isValid.isValid) {
-    return res
-      .status(400)
-      .json({
-        error: "Le mot de passe ne respecte pas les critères de sécurité",
-      });
+    return res.status(400).json({
+      error: "Le mot de passe ne respecte pas les critères de sécurité",
+    });
   }
 
   if (!username || !email || !password) {
