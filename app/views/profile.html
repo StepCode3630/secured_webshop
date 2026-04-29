@@ -88,17 +88,13 @@
       // ------------------------------------------------------------------
       // Chargement du profil au démarrage
       // ------------------------------------------------------------------
-      let CURRENT_USER_ID = null;
       async function loadProfile() {
-        const params = new URLSearchParams(window.location.search);
-        const userId = params.get("id");
-        if (!userId) {
-          showMessage("error", "ID utilisateur manquant dans l’URL");
+        const res = await fetch("/api/profile", {
+          credentials: "include", // Inclure les cookies pour l'authentification
+        });
+        if (!res.ok) {
           return;
         }
-        CURRENT_USER_ID = userId;
-        const res = await fetch(`/api/profile/${encodeURIComponent(userId)}`);
-        if (!res.ok) return;
         const user = await res.json();
 
         document.getElementById("username").textContent = user.username;
