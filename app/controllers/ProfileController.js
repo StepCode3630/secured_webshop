@@ -1,9 +1,7 @@
 import path from "path";
 import db from "../config/db.js";
 import { userInfo } from "os";
-
-// TODO: remplacer par session / JWT pour mise en prod
-const DEFAULT_USER_ID = null;
+import { jwtVerify } from "jose";
 
 // ----------------------------------------------------------
 // GET /api/profile

@@ -12,7 +12,6 @@ export const login = async (req, res) => {
     console.log("LOGIN START", { email });
 
     if (!email || !password) {
-      console.log("STEP 1");
       return res.status(400).json({ error: "Email et mot de passe requis" });
     }
 
@@ -24,8 +23,6 @@ export const login = async (req, res) => {
         return res.status(500).json({ error: err.message });
       }
 
-      console.log("STEP 2 - USER QUERY DONE");
-
       if (results.length === 0) {
         console.log("NO USER FOUND");
         return res.status(401).json({ error: "Identifiants invalides" });
@@ -36,35 +33,35 @@ export const login = async (req, res) => {
       console.log("User object:", user);
       console.log("Provided password:", password);
 
-      const valid = await verifyPassword(password, user.password);
+      // verifyPassword expects (hash, plainPassword)
+      const valid = await verifyPassword(user.password, password);
 
       console.log("PASSWORD VALID:", valid);
 
       if (!valid) {
-        console.log("STEP 3 - INVALID PASSWORD");
         return res.status(401).json({ error: "Identifiants invalides" });
       }
 
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-      const token = await new SignJWT({ role: user.role })
+      const token = await new SignJWT({
+        role: user.role,
+        email: user.email,
+      })
         .setProtectedHeader({ alg: "HS256" })
         .setSubject(String(user.id))
         .setIssuedAt()
-        .setExpirationTime("15m")
+        .setExpirationTime(process.env.JWT_EXPIRATION || "15m")
         .sign(secret);
 
-      console.log("TOKEN GENERATED");
-
-      return res.json({
-        message: "Connexion réussie",
-        token,
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-        },
+      res.cookie("token", token, {
+        httpOnly: true, // 🔥 empêche accès JS
+        secure: false, // true en HTTPS (prod)
+        sameSite: "Strict",
+        maxAge: 15 * 60 * 1000, // 15min
       });
+
+      res.json({ message: "Connexion réussie" });
     });
   } catch (err) {
     console.error("LOGIN CRASH:", err);

@@ -3,6 +3,7 @@ import multer from "multer";
 import path from "path";
 import * as controller from "../controllers/ProfileController.js";
 import { fileURLToPath } from "url";
+import authenticateToken from "../middleware/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,9 +19,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-router.get("/:id?", controller.get);
-router.post("/:id", controller.update);
-router.post("/:id/photo", upload.single("photo"), controller.uploadPhoto);
+router.get("/:id?", authenticateToken, controller.get);
+router.post("/:id", authenticateToken, controller.update);
+router.post(
+  "/:id/photo",
+  authenticateToken,
+  upload.single("photo"),
+  controller.uploadPhoto,
+);
 
 // app.get()
 
