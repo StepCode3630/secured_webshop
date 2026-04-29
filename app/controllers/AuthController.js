@@ -45,7 +45,7 @@ export const login = async (req, res) => {
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
       const token = await new SignJWT({
-        role: user.role,
+        role: user.role, //Affichage du role dans le paylod du token
         email: user.email,
       })
         .setProtectedHeader({ alg: "HS256" })
