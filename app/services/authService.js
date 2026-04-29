@@ -31,3 +31,24 @@ export async function verifyPassword(hash, password) {
     throw err;
   }
 }
+
+export function validatePassword(password) {
+  const minLength = 8;
+
+  const hasLower = /[a-z]/.test(password);
+  const hasUpper = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+
+  const isValid =
+    password.length >= minLength &&
+    hasLower &&
+    hasUpper &&
+    hasNumber &&
+    hasSpecial;
+
+  return {
+    isValid,
+    score: [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length,
+  };
+}

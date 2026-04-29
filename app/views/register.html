@@ -16,6 +16,12 @@
           <h1>Inscription</h1>
 
           <form class="login-form" @submit.prevent="handleRegister">
+            <div v-if="errorMessage" class="message error">
+              {{ errorMessage }}
+            </div>
+            <div v-if="successMessage" class="message success">
+              {{ successMessage }}
+            </div>
             <div class="form-group">
               <label for="username">Nom d'utilisateur</label>
               <input
@@ -46,7 +52,43 @@
                 name="password"
                 v-model="password"
                 required
+                @input="updateStrength"
               />
+              <div class="bar-container">
+                <div
+                  class="bar"
+                  :style="{ width: passwordStrength.score * 20 + '%', background: passwordStrength.color }"
+                ></div>
+              </div>
+              <p class="strength-label">{{ passwordStrength.label }}</p>
+
+              <ul class="password-rules">
+                <li
+                  :class="{'rule': true, 'pass': passwordRules.length, 'fail': !passwordRules.length}"
+                >
+                  <span class="dot"></span>Au moins 8 caractères
+                </li>
+                <li
+                  :class="{'rule': true, 'pass': passwordRules.lower, 'fail': !passwordRules.lower}"
+                >
+                  <span class="dot"></span>Lettre minuscule
+                </li>
+                <li
+                  :class="{'rule': true, 'pass': passwordRules.upper, 'fail': !passwordRules.upper}"
+                >
+                  <span class="dot"></span>Lettre MAJUSCULE
+                </li>
+                <li
+                  :class="{'rule': true, 'pass': passwordRules.digit, 'fail': !passwordRules.digit}"
+                >
+                  <span class="dot"></span>Chiffre
+                </li>
+                <li
+                  :class="{'rule': true, 'pass': passwordRules.special, 'fail': !passwordRules.special}"
+                >
+                  <span class="dot"></span>Caractère spécial (facultatif)
+                </li>
+              </ul>
             </div>
 
             <div class="form-group">
@@ -66,6 +108,7 @@
                 id="profile-pic"
                 name="profile-pic"
                 accept="image/*"
+                @change="handleFile"
               />
             </div>
 

@@ -75,6 +75,15 @@ export const login = async (req, res) => {
 export const register = async (req, res) => {
   const { username, email, password, address } = req.body;
   const photo = req.file;
+  const isValid = validatePassword(password);
+
+  if (!isValid.isValid) {
+    return res
+      .status(400)
+      .json({
+        error: "Le mot de passe ne respecte pas les critères de sécurité",
+      });
+  }
 
   if (!username || !email || !password) {
     return res
