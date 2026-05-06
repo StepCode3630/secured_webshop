@@ -35,11 +35,10 @@ const app = Vue.createApp({
         digit: /[0-9]/.test(password),
       };
 
-      const meets = rules.length && rules.lower && rules.upper && rules.digit;
+      const meets = this.passwordStrength.score >= 4; // Require at least "Bon" strength
 
       if (!meets) {
-        this.errorMessage =
-          "Mot de passe faible (8+ caractères, majuscule, minuscule, chiffre).";
+        this.errorMessage = "Mets un meilleur mot de passe (min fort)";
         this.successMessage = "";
         return;
       }
@@ -61,7 +60,6 @@ const app = Vue.createApp({
 
         if (res.ok) {
           this.successMessage = "Compte créé !";
-          this.errorMessage = "";
           window.location.href = "/login";
         } else {
           this.errorMessage = data.error;
@@ -72,6 +70,7 @@ const app = Vue.createApp({
       }
     },
   },
+
   computed: {
     // individual rule checks for the UI checklist
     passwordRules() {
