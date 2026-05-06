@@ -38,17 +38,12 @@ export function validatePassword(password) {
   const hasLower = /[a-z]/.test(password);
   const hasUpper = /[A-Z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
-  const hasSpecial = /[^A-Za-z0-9]/.test(password);
 
   const isValid =
-    password.length >= minLength &&
-    hasLower &&
-    hasUpper &&
-    hasNumber &&
-    hasSpecial;
+    password.length >= minLength && hasLower && hasUpper && hasNumber;
 
   return {
     isValid,
-    score: [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length,
+    score: [hasLower, hasUpper, hasNumber].filter(Boolean).length,
   };
 }

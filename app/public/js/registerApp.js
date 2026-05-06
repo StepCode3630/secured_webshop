@@ -35,7 +35,7 @@ const app = Vue.createApp({
         digit: /[0-9]/.test(password),
       };
 
-      const meets = this.passwordStrength.score >= 4; // Require at least "Bon" strength
+      const meets = rules.length && rules.lower && rules.upper && rules.digit;
 
       if (!meets) {
         this.errorMessage = "Mets un meilleur mot de passe (min fort)";
@@ -48,7 +48,9 @@ const app = Vue.createApp({
       formData.append("email", this.email);
       formData.append("password", this.password);
       formData.append("address", this.address);
-      formData.append("photo", this.file);
+      if (this.file) {
+        formData.append("photo", this.file);
+      }
 
       try {
         const res = await fetch(apiUrl, {

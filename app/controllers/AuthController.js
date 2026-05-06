@@ -108,6 +108,11 @@ export const register = async (req, res) => {
     [username, email, hashedPassword, address, photoPath],
     (err) => {
       if (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+          return res
+            .status(409)
+            .json({ error: "Cet email existe déjà. Utilise un autre email." });
+        }
         return res.status(500).json({ error: err.message });
       }
       res.json({ message: "Utilisateur enregistré" });
