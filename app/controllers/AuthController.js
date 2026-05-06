@@ -16,7 +16,10 @@ export const login = async (req, res) => {
     console.log("LOGIN START", { email });
 
     if (!email || !password) {
-      return res.status(400).json({ error: "Email et mot de passe requis" });
+      return res.status(400).json({
+        code: "MISSING_FIELDS",
+        error: "Email et mot de passe requis",
+      });
     }
 
     const query = "SELECT * FROM users WHERE email = ?";
@@ -29,7 +32,10 @@ export const login = async (req, res) => {
 
       if (results.length === 0) {
         console.log("NO USER FOUND");
-        return res.status(401).json({ error: "Identifiants invalides" });
+        return res.status(401).json({
+          code: "INVALID_CREDENTIALS",
+          error: "Identifiants invalides",
+        });
       }
 
       const user = results[0];
@@ -43,7 +49,12 @@ export const login = async (req, res) => {
       console.log("PASSWORD VALID:", valid);
 
       if (!valid) {
-        return res.status(401).json({ error: "Identifiants invalides" });
+        return res
+          .status(401)
+          .json({
+            code: "INVALID_CREDENTIALS",
+            error: "Identifiants invalides",
+          });
       }
 
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);

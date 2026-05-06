@@ -1,6 +1,7 @@
 import "dotenv/config.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import rateLimit from "express-rate-limit";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +15,17 @@ import express from "express";
 
 const app = express();
 app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 min
+  max: 5, // max 5 requêtes par IP
+  message: {
+    code: "TOO_MANY_REQUESTS",
+    message: "Trop de tentatives, réessaye dans une minute",
+    retryAfter: 60, // en secondes
+  },
+});
+app.use("/api/auth/login", limiter);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur http://localhost:${PORT}`);

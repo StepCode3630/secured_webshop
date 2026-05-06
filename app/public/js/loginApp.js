@@ -5,6 +5,9 @@ const app = Vue.createApp({
       password: "",
       errorMessage: "",
       successMessage: "",
+      loading: false,
+      errorMessage: "",
+      successMessage: "",
     };
   },
   methods: {
@@ -24,20 +27,39 @@ const app = Vue.createApp({
           }),
         });
         const data = await response.json();
-        if (response.ok) {
-          this.successMessage = data.message;
-          this.errorMessage = "";
-          const user = data.user;
-          console.log("Utilisateur connecté :", user, user && user.id);
-          if (user && user.id) {
-            localStorage.setItem("user", JSON.stringify(user));
-            window.location.href = `/profile?id=${encodeURIComponent(user.id)}`;
-          } else {
-            window.location.href = "/profile";
+
+        if (!response.ok) {
+          switch (data.code) {
+            case "MISSING_FIELDS":
+              this.errorMessage = "Email et mot de passe requis";
+              break;
+            case "INVALID_CREDENTIALS":
+              this.errorMessage = "Identifiants invalides";
+              break;
+            case "TOO_MANY_REQUESTS":
+              this.errorMessage =
+                "Trop de tentatives, réessaye dans une minute";
+              break;
+            default:
+              this.errorMessage =
+                "Une erreur est survenue. Veuillez réessayer.";
           }
-        } else {
-          this.errorMessage = data.error;
-          this.successMessage = "";
+
+          // this.successMessage = "Connextion réussie ! Redirection en cours...";
+
+          if (data.retryAfter) {
+            let seconds = data.retryAfter;
+
+            const interval = setInterval(() => {
+              this.errorMessage = `Trop de tentatives, réessaye dans ${seconds} secondes`;
+              seconds--;
+
+              if (seconds < 0) {
+                clearInterval(interval);
+                this.errorMessage = "";
+              }
+            }, 1000);
+          }
         }
       } catch (error) {
         console.error("Erreur lors de la connexion :", error);

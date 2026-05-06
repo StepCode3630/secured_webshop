@@ -42,7 +42,10 @@
               />
             </div>
 
-            <button type="submit" class="btn">Se connecter</button>
+            <button type="submit" class="btn" :disabled="loading">
+              <span v-if="loading">Connexion...</span>
+              <span v-else>Se connecter</span>
+            </button>
           </form>
         </div>
       </section>
