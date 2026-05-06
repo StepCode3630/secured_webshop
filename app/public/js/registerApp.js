@@ -103,7 +103,7 @@ const app = Vue.createApp({
         this.passwordRules.digit &&
         this.passwordRules.special
       ) {
-        return { label: "Divin", color: "#7b1abcff" };
+        return { score: 5, label: "Divin", color: "#7b1abcff" };
       }
 
       const rules = [

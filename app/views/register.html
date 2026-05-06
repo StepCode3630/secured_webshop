@@ -57,8 +57,8 @@
               <div class="bar-container">
                 <div
                   class="bar"
-                  :style="{ width: passwordStrength.score * 3 + '%', background: passwordStrength.color }"
-                  v-if="passwordStrength.label == 'Divin' ? '1600px' : passwordStrength.score * 3 + '%'"
+                  :class="{ divine: passwordStrength.label === 'Divin' }"
+                  :style="{ width: passwordStrength.label === 'Divin' ? '120vw' : Math.min(passwordStrength.score * 20, 100) + '%', background: passwordStrength.color }"
                 ></div>
               </div>
               <p class="strength-label">{{ passwordStrength.label }}</p>

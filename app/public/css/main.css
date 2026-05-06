@@ -268,18 +268,26 @@ input[type="file"] {
 
 /* Password strength bar and rules */
 .bar-container {
+  width: 100%;
+  max-width: 100%;
   height: 8px;
   background: #f3f4f6;
   border-radius: 999px;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 0.6rem;
+  position: relative;
 }
 .bar {
+  max-width: none;
   height: 100%;
   width: 0%;
   transition:
     width 0.18s ease,
     background 0.18s ease;
+}
+.bar.divine {
+  position: relative;
+  left: 0;
 }
 .strength-label {
   margin: 0.5rem 0 0.4rem;
