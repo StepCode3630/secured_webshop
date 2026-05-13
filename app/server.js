@@ -12,6 +12,8 @@ const __dirname = path.dirname(__filename);
 
 import cookieParser from "cookie-parser";
 import express from "express";
+import https from "https";
+import fs from "fs";
 
 const app = express();
 app.use(express.json());
@@ -27,8 +29,15 @@ const limiter = rateLimit({
 });
 app.use("/api/auth/login", limiter);
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur http://localhost:${PORT}`);
+
+const sslOptions = {
+  key: fs.readFileSync("key.pem"),
+  cert: fs.readFileSync("cert.pem"),
+};
+
+const server = https.createServer(sslOptions, app);
+server.listen(PORT, () => {
+  console.log(`Serveur HTTPS démarré sur https://localhost:${PORT}`);
 });
 
 // Middleware pour parser les cookies
