@@ -83,5 +83,12 @@ app.get("/admin", (_req, res) =>
   res.sendFile(path.join(__dirname, "views", "admin.html")),
 );
 
-// Démarrage du serveur
-app.get("/test", (_req, res) => res.send("db admin: root, pwd : root"));
+// // Démarrage du serveur
+// app.get("/test", (_req, res) =>
+//   res.send(
+//     "db admin: root, pwd : root, url " +
+//       process.env.DB_HOST +
+//       ", port " +
+//       process.env.DB_PORT,
+//   ),
+// );
