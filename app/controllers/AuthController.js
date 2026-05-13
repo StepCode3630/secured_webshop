@@ -49,12 +49,10 @@ export const login = async (req, res) => {
       console.log("PASSWORD VALID:", valid);
 
       if (!valid) {
-        return res
-          .status(401)
-          .json({
-            code: "INVALID_CREDENTIALS",
-            error: "Identifiants invalides",
-          });
+        return res.status(401).json({
+          code: "INVALID_CREDENTIALS",
+          error: "Identifiants invalides",
+        });
       }
 
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);

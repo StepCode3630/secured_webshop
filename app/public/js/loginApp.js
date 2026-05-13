@@ -27,8 +27,10 @@ const app = Vue.createApp({
           }),
         });
         const data = await response.json();
-
-        if (!response.ok) {
+        if (response.ok) {
+          this.successMessage = "Connexion réussie ! Redirection en cours...";
+          window.location.href = "/profile";
+        } else if (!response.ok) {
           switch (data.code) {
             case "MISSING_FIELDS":
               this.errorMessage = "Email et mot de passe requis";
@@ -44,8 +46,6 @@ const app = Vue.createApp({
               this.errorMessage =
                 "Une erreur est survenue. Veuillez réessayer.";
           }
-
-          // this.successMessage = "Connextion réussie ! Redirection en cours...";
 
           if (data.retryAfter) {
             let seconds = data.retryAfter;

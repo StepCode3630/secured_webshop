@@ -79,12 +79,6 @@
 
     <script src="/js/nav.js"></script>
     <script>
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      if (!user) {
-        // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-        window.location.href = "/login";
-      }
       // ------------------------------------------------------------------
       // Chargement du profil au démarrage
       // ------------------------------------------------------------------
@@ -93,9 +87,21 @@
           credentials: "include", // Inclure les cookies pour l'authentification
         });
         if (!res.ok) {
+          console.error(
+            "Erreur lors du chargement du profil :",
+            res.statusText,
+          );
+          window.location.href = "/login";
+
           return;
         }
         const user = await res.json();
+
+        if (!user) {
+          console.error("Aucun utilisateur trouvé dans la réponse");
+          window.location.href = "/login";
+          return;
+        }
 
         document.getElementById("username").textContent = user.username;
         document.getElementById("email").textContent = user.email;
