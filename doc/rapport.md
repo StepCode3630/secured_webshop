@@ -1,0 +1,67 @@
+# Secured Webshop
+
+Projet pédagogique utilisé dans le cadre du cours **183 - Sécurité des applications** (ETML).
+
+Cette application est un serveur web Node.js qui regroupe deux parties : un **backend** (API REST en Express qui communique avec la base de données MySQL) et un **frontend** (pages HTML avec **Vue option API** servies directement par le même serveur). Les pages web appellent l'API via `fetch()` pour afficher et modifier les données.
+
+## 1) Frontend: page login
+
+- J'ai d'abord mis les différents champ nécessaires à la connexion coté html dans ce '[commit](https://github.com/StepCode3630/secured_webshop/commit/7b01c46db1f7ac2277dfac93b9be1dfeff591b0b#diff-b85e06b98b12219e81dc5ef9f54cc699ad58727e0809073734c0d6678d017b71)'
+
+- Ensuite pour la connexion backend, j'ai utilisé **Vue.js option API** avec **_v-model_** pour facilement transmettre les données entre l'html et le js (et invérsement d'ailleurs)
+- Puis coté JS, j'ai mis un **data** qui récupère ces données et je crée une méthode async **_handleSubmit_** qui envoie la requête de connextion vers l'API /auth/login et pour oui ou non la vadlider.
+
+Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/9d9aaa32625636a2b0f778c1bd17b548a49af3a2#diff-510581575406054593c8c45c85e2fc9c87caafdb6d040fb88eb8b3a6efad7a53)
+
+PS: Le login de authController permet deja d'avoir une connexion fonctionel sans sécurité
+
+## 2) Frontend: page inscription
+
+- J'ai d'abord créer les champs nécessaires à l'inscription coté html avec des **_v-model_**
+- Ensuite je récupère ces données via un **data** et j'ai une méthode **_handleRegister_** qui envoie la requête vers l'API /auth/register et valide ou non l'inscription puis redirige vers /login pour se co
+- Puis créer le controller d'inscription qui qui contrôle si tout les champs obliguatoires sont présents, créer une requête **insert into** avec les données récupérés et renvoie si ça a fonctionné ou non
+
+Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/4830ab395c5f716eda6a165c497a10b2dfa5f800#diff-7ff0043793a044c51ccd3464f600aec58051af3dafa3980c0e92732cf13a6ed5)
+
+## 3) BDD: remplacer les mdp en clair
+
+- J'ai utilisé **Argon2id** car l'un des meilleurs hasheurs
+- J'ai créer 2 fonctions, **hashPassword** qui permet de hash où on peut paramétrer les args, **verifyPassword** qui permet de vérifier le mdp via une fonction **_argon2.verify_**
+- Utilisation de ses fonctions dans le authController de login et register
+
+Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/cada866bc4fbef945360c5eda3219e188c6b706b#diff-d2d18d2598c345c318df578d5c2091d7a403f32b4dcf0131b6521daf03d4fc78)
+
+Amélioration du code en mettant de meilleurs fonctions dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/69a8697cc613699334c69dee3e86f31245bb6e55#diff-d2d18d2598c345c318df578d5c2091d7a403f32b4dcf0131b6521daf03d4fc78)
+
+## 4) Ajout du sel
+
+- Argon mets automatiquement un sel par défault
+
+Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/4a0824cc67fab4596c8a4c5d710fd965a38f9765)
+
+## 5) Ajout du poivre
+
+- Création d'un pepper dans le .env
+- Hash du password pas encore hashé avec le pepper dans les fonctions **hashPassword** et **verifyPassword**
+
+Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/061961310cd1a96e70842c8e8c0e82da4a47b324)
+
+## 6) Corriger les requêtes / injection
+
+- Utiliser des requêtes préparés en créant une requête de base sans les infos de l'user
+- Puis exectuer la requête avec infos avec gestion des erreurs
+
+Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/fbf386f2cec8187e92a1cd016b714dbe3a8a0288)
+
+## 7) Implémenter token JWT
+
+- J'ai utilisé JOSE pour le jwt, cookie parser pour stocker le token dans les cookies et dotenv
+- Mis dans le .env le text jwt secret et la durée
+- J'ai créé un token avec les champs clé nécessaire (donnée de l'user et durée du token)
+- Envoie ce token vers le client (naviguateur) avec certains paramètres
+- Mis le cookies dans le midlleware qui prend le token et le mets dedans
+- On vérifie si le token est valide dans le middleware
+- Mis en type EsModule
+
+Code dispo dans ces commits suivants:
+[Commit v1](https://github.com/StepCode3630/secured_webshop/commit/2d73f7573d5f497c0d91aa464b2e6dbfb3167645) [EsModule](https://github.com/StepCode3630/secured_webshop/commit/44d71ab47e512e65a0c4c5ad50158a7b6852f2f1) [Commit v2](https://github.com/StepCode3630/secured_webshop/commit/09418e4e3e13b734ca973549d9c0ce0c2539fd9f)
