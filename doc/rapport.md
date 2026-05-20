@@ -65,3 +65,43 @@ Code disponible dans ce [commit](https://github.com/StepCode3630/secured_webshop
 
 Code dispo dans ces commits suivants:
 [Commit v1](https://github.com/StepCode3630/secured_webshop/commit/2d73f7573d5f497c0d91aa464b2e6dbfb3167645) [EsModule](https://github.com/StepCode3630/secured_webshop/commit/44d71ab47e512e65a0c4c5ad50158a7b6852f2f1) [Commit v2](https://github.com/StepCode3630/secured_webshop/commit/09418e4e3e13b734ca973549d9c0ce0c2539fd9f)
+
+## 8. Ajout er les rôles dasn Jwt + protégéer les routes admin
+
+- J'ai ajouté le role de l'user dans le paylod
+- J'ai ajoutl dans le middleware une constante adminOnly qui vérifie si le rôle de l'user est admin ou non
+- Ensuite j'ai importé la constante adminOnly et l'ait mis dans la route admin
+
+Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/4f8a7407823eb4163b45a0a65e5c99a7f870f370)
+
+## 9. Politque de mot de passe
+
+- J'ai ajouté une fonction qui permet de valider un mot de passe selon une politique (min. 8 caractères, avec lettre minuscules et maj, etc...)
+- Mis cette fonction dans le authController pour vérifier si le password saisi est valide
+- Implémeter le front end avec html, css et js (vue)
+
+Code dispo dans ces commits: [commit](https://github.com/StepCode3630/secured_webshop/commit/562f6549f56f514a13d23cab22fba5af0c1b506c#diff-d2d18d2598c345c318df578d5c2091d7a403f32b4dcf0131b6521daf03d4fc78) , [commit Meilleur frontend](https://github.com/StepCode3630/secured_webshop/commit/8195aace2dc04926f1edc07bcdd65783c1bba49d)
+
+## 10. Limiter le nombre de tentatives de login (5 par 1min)
+
+- Installé express-rate-limit via npm
+- mis dans server.js un limiter
+- J'ai ajouté des messages en fonctions des erreurs dans le authController
+- Implémenter le front end avec html, css et js dans la methode handleSubmit où je renvoie les erreurs
+
+Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/9f690290b9c9365b4a0b61686857c4d977acff18#diff-02bedb39cb8b25670e4e85144002f256b1a04373d239a9454a650ad1827a13eb)
+
+## 11. routes https
+
+- Installé fs et https via npm
+- ajouté des const des params et mis le https dans le server.js
+- lancé une commande pour généré les certification
+
+Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/cd7fc5f29e44c729545d8f68527b2ea70facb5aa#diff-02bedb39cb8b25670e4e85144002f256b1a04373d239a9454a650ad1827a13eb)
+
+## 12. Audit les dépendances NPM
+
+- Effectuer la commande
+  bash'''
+  npm audit fix
+  '''
