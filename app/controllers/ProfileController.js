@@ -2,6 +2,10 @@ import path from "path";
 import db from "../config/db.js";
 import { userInfo } from "os";
 import { jwtVerify } from "jose";
+import {
+  decryptFromString,
+  encryptToString,
+} from "../services/cryptoService.js";
 
 // ----------------------------------------------------------
 // GET /api/profile
@@ -28,7 +32,12 @@ export const get = async (req, res) => {
         if (results.length === 0) {
           return res.status(404).json({ error: "Utilisateur introuvable" });
         }
-        res.json(results[0]);
+
+        const user = results[0];
+        user.email = decryptFromString(user.email);
+        user.address = decryptFromString(user.address);
+
+        res.json(user);
       },
     );
   } catch (err) {
@@ -48,9 +57,10 @@ export const update = (req, res) => {
     return res.status(400).json({ error: "ID utilisateur requis" });
   }
 
+  const encryptedAddress = encryptToString(address);
   db.query(
     "UPDATE users SET address = ? WHERE id = ?",
-    [address, userId],
+    [encryptedAddress, userId],
     (err) => {
       if (err) {
         return res.status(500).json({ error: "Erreur serveur" });

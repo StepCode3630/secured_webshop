@@ -1,4 +1,5 @@
 import db from "../config/db.js";
+import { decryptFromString } from "../services/cryptoService.js";
 
 export default {
   // ----------------------------------------------------------
@@ -11,7 +12,14 @@ export default {
         if (err) {
           return res.status(500).json({ error: "Erreur serveur" });
         }
-        res.json(results);
+
+        const decryptedResults = results.map((user) => ({
+          ...user,
+          email: decryptFromString(user.email),
+          address: decryptFromString(user.address),
+        }));
+
+        res.json(decryptedResults);
       },
     );
   },

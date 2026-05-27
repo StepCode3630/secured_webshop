@@ -5,6 +5,10 @@ import {
   validatePassword,
 } from "../services/authService.js";
 import { SignJWT } from "jose";
+import {
+  encryptToString,
+  decryptFromString,
+} from "../services/cryptoService.js";
 
 // ----------------------------------------------------------
 // POST /api/auth/login
@@ -22,23 +26,30 @@ export const login = async (req, res) => {
       });
     }
 
-    const query = "SELECT * FROM users WHERE email = ?";
+    const normalizedEmail = email.trim().toLowerCase();
+    const query = "SELECT * FROM users";
 
-    db.query(query, [email], async (err, results) => {
+    db.query(query, async (err, results) => {
       if (err) {
         console.log("DB ERROR:", err);
         return res.status(500).json({ error: "Erreur serveur" });
       }
 
-      if (results.length === 0) {
+      const user = results.find((row) => {
+        const dbEmail = decryptFromString(row.email);
+        return (
+          typeof dbEmail === "string" &&
+          dbEmail.trim().toLowerCase() === normalizedEmail
+        );
+      });
+
+      if (!user) {
         console.log("NO USER FOUND");
         return res.status(401).json({
           code: "INVALID_CREDENTIALS",
           error: "Identifiants invalides",
         });
       }
-
-      const user = results[0];
 
       console.log("User object:", user);
       console.log("Provided password:", password);
@@ -59,7 +70,7 @@ export const login = async (req, res) => {
 
       const token = await new SignJWT({
         role: user.role, //Affichage du role dans le paylod du token
-        email: user.email,
+        email: decryptFromString(user.email),
       })
         .setProtectedHeader({ alg: "HS256" })
         .setSubject(String(user.id))
@@ -109,22 +120,48 @@ export const register = async (req, res) => {
     return res.status(500).json({ error: "Impossible de créer le compte" });
   }
 
+  const normalizedEmail = email.trim().toLowerCase();
   const photoPath = photo ? "/uploads/" + photo.filename : null;
-  //Empeche une injection SQL en utilisant des requetes préparées
-  const query = `INSERT INTO users (username, email, password, address, photo_path) VALUES (?, ?, ?, ?, ?)`;
-  db.query(
-    query,
-    [username, email, hashedPassword, address, photoPath],
-    (err) => {
-      if (err) {
-        if (err.code === "ER_DUP_ENTRY") {
-          return res
-            .status(409)
-            .json({ error: "Cet email existe déjà. Utilise un autre email." });
+  const encryptedEmailJson = encryptToString(normalizedEmail);
+  const encryptedAddressJson = address ? encryptToString(address) : null;
+
+  db.query("SELECT email FROM users", (err, rows) => {
+    if (err) {
+      console.log("DB ERROR:", err);
+      return res.status(500).json({ error: "Erreur serveur" });
+    }
+
+    const emailExists = rows.some((row) => {
+      const dbEmail = decryptFromString(row.email);
+      return (
+        typeof dbEmail === "string" &&
+        dbEmail.trim().toLowerCase() === normalizedEmail
+      );
+    });
+
+    if (emailExists) {
+      return res.status(409).json({
+        error: "Cet email existe déjà. Utilise un autre email.",
+      });
+    }
+
+    // Empêche une injection SQL en utilisant des requêtes préparées
+    const query = `INSERT INTO users (username, email, password, address, photo_path) VALUES (?, ?, ?, ?, ?)`;
+    db.query(
+      query,
+      [
+        username,
+        encryptedEmailJson,
+        hashedPassword,
+        encryptedAddressJson,
+        photoPath,
+      ],
+      (err) => {
+        if (err) {
+          return res.status(500).json({ error: "Erreur serveur" });
         }
-        return res.status(500).json({ error: "Erreur serveur" });
-      }
-      res.json({ message: "Utilisateur enregistré" });
-    },
-  );
+        res.json({ message: "Utilisateur enregistré" });
+      },
+    );
+  });
 };
