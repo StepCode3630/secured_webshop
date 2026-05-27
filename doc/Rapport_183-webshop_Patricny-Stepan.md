@@ -155,7 +155,7 @@ pour qu'un attaquant ne puisse pas "deviner" les erreurs potentiels
 - Déchiffrer les infos dans la page profil dans profilController
 - Déchiffrer les infos de l'user dans la page admin dans AdminController
 
-Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/883289a36c6386729e393d6315062dd14dbb533d)
+Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/883289a36c6386729e393d6315062dd14dbb533d) dans la branche chiffrement
 
 # Conclusion
 
