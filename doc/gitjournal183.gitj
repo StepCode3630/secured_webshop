@@ -54,6 +54,29 @@
       "duration": 135,
       "status": "DONE",
       "author": "StepCode3630"
+    },
+    {
+      "id": "72002d06-34e6-4c02-adda-70941b7b94a3",
+      "type": "commitpatch",
+      "sha": "ba73f4a810fd818e39a69a31463db06e1262c55a",
+      "url": "https://github.com/StepCode3630/secured_webshop/commit/ba73f4a810fd818e39a69a31463db06e1262c55a",
+      "name": "feat: ajout honeypot",
+      "description": "",
+      "date": "2026-05-27T08:15:00.000Z",
+      "duration": 80,
+      "status": "Done",
+      "author": "StepCode3630",
+      "patch": true
+    },
+    {
+      "id": "42d3ad26-95dc-4d8d-bb11-f5c2256da7ad",
+      "type": "commitless",
+      "name": "feat: chiffrement",
+      "description": "Pas terminé mais mis dans une autre branche",
+      "date": "2026-05-27T09:59:00.000Z",
+      "duration": 70,
+      "status": "WIP",
+      "author": "StepCode3630"
     }
   ]
 }

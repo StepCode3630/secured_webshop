@@ -113,3 +113,38 @@ Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/comm
 - J'ai pas réussi à tester avec un mot de passe hashé avec Argon2id, j'ai donc hashé avec Argon2D, mis un mot de passe min fort comme _Qwertz1234.!_
 - Résultat, après 10 min, il a du mal:
   ![john entrain de déhash](image.png)
+
+## 14. Ajouter un honeypot (pas demandé)
+
+- J'ai installé la librairie **express-admin-honeypot**
+
+- Créé une fonction **_MiddlePot_** comme Middleware qui créé une fausse page admin et log des infos de l'user
+- Créé des fausses routes admin avec middlewaire **_MiddlePot_**
+- Ajuster la fonction **_authenticateToken_** pour rediriger vers fausse page admin si pas de token
+- Dans server.js , j'ai ajusté la route /api/admin, et que si on tente d'accéder à /admin alors on se fait rediriger vers la fausse page admin /wp-admin
+
+Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/ba73f4a810fd818e39a69a31463db06e1262c55a)
+
+## 15. Gérer les exceptions
+
+- éviter les message du genre
+
+```bash
+error: err.message
+```
+
+Mais priviligier
+
+```bash
+error: "Erreur serveur" //ou autre message peu détaillant
+```
+
+pour qu'un attaquant ne puisse pas "deviner" les erreurs potentiels
+
+- Middlewaire global recommandé situé à la fin de **server.js**
+
+  Il permet de capturer les erreurs async, routes et middleware et évite crachs et / ou fuites d'infos
+
+# Conclusion
+
+Je me suis assez appliqué sur le code en général, j'ai utilisé l'IA pour m'aider à comprendre certaines points surtout sur le token JWT et chiffrement/déchiffrement. J'ai appris beaucoup de chose concernant la sécurité en général mais surtout pour une app web.
