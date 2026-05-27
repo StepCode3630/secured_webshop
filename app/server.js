@@ -14,6 +14,7 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import https from "https";
 import fs from "fs";
+import { honeypot } from "express-admin-honeypot";
 
 const app = express();
 app.use(express.json());
@@ -56,10 +57,32 @@ app.use(express.static(path.join(__dirname, "public")));
 import authRoute from "./routes/Auth.js";
 import profileRoute from "./routes/Profile.js";
 import adminRoute from "./routes/Admin.js";
+import authenticateToken, { adminOnly } from "./middleware/auth.js";
+import MiddlePot from "./middleware/honeypot.js";
+
+app.use("/api/admin", authenticateToken, adminOnly, adminRoute);
+
+app.get(
+  "/admin",
+  authenticateToken,
+  (req, res, next) => {
+    if (req.user.role !== "admin") {
+      return res.redirect("/wp-admin");
+    }
+
+    next();
+  },
+  (_req, res) => {
+    res.sendFile(path.join(__dirname, "views/admin.html"));
+  },
+);
+
+app.get("/wp-admin", MiddlePot);
+app.get("/admin.php", MiddlePot);
+app.get("/administrator", MiddlePot);
 
 app.use("/api/auth", authRoute);
 app.use("/api/profile", profileRoute);
-app.use("/api/admin", adminRoute);
 
 // ---------------------------------------------------------------
 // Routes pages (retournent du HTML)

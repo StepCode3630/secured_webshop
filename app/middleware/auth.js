@@ -8,9 +8,7 @@ export default async function authenticateToken(req, res, next) {
     const token = req.cookies.token;
 
     if (!token) {
-      return res
-        .status(401)
-        .json({ error: "Token d'authentification manquant" });
+      return res.redirect("/wp-admin");
     }
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -30,6 +28,5 @@ export const adminOnly = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ error: "Accès réservé aux administrateurs" });
   }
-
   next();
-};  
+};
