@@ -101,7 +101,15 @@ Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/comm
 
 ## 12. Audit les dépendances NPM
 
-- Effectuer la commande
-  bash'''
+- Effectué la commande
+  ```bash
   npm audit fix
-  '''
+  ```
+
+## 13. Vérifier la résistance des hash
+
+- J'ai utilisé une VM sous Kali Linux pour pouvoir installer John Ripper
+- Installé John the Reaper via shell
+- J'ai pas réussi à tester avec un mot de passe hashé avec Argon2id, j'ai donc hashé avec Argon2D, mis un mot de passe min fort comme _Qwertz1234.!_
+- Résultat, après 10 min, il a du mal:
+  ![john entrain de déhash](image.png)
