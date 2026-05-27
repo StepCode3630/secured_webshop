@@ -145,6 +145,18 @@ pour qu'un attaquant ne puisse pas "deviner" les erreurs potentiels
 
   Il permet de capturer les erreurs async, routes et middleware et évite crachs et / ou fuites d'infos
 
+## Chiffrement des données sensibles ( pas terminé)
+
+- Installé dépendances _crypto_
+- Mis dans le .env une clé crypto
+- Créer un services pour chiffrer via AES-256, déchiffrer, chiffrer en string, déchiffrer depuis le string
+- Import des fonctions, chiffrer email et adress avant insert dans la db dans register authController
+- Déchiffer infos lors de login dans login authController
+- Déchiffrer les infos dans la page profil dans profilController
+- Déchiffrer les infos de l'user dans la page admin dans AdminController
+
+Code dispo dans ce [commit](https://github.com/StepCode3630/secured_webshop/commit/883289a36c6386729e393d6315062dd14dbb533d)
+
 # Conclusion
 
 Je me suis assez appliqué sur le code en général, j'ai utilisé l'IA pour m'aider à comprendre certaines points surtout sur le token JWT et chiffrement/déchiffrement. J'ai appris beaucoup de chose concernant la sécurité en général mais surtout pour une app web.
