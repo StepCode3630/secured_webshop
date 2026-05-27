@@ -27,7 +27,7 @@ export const login = async (req, res) => {
     db.query(query, [email], async (err, results) => {
       if (err) {
         console.log("DB ERROR:", err);
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: "Erreur serveur" });
       }
 
       if (results.length === 0) {
@@ -106,7 +106,7 @@ export const register = async (req, res) => {
   try {
     hashedPassword = await hashPassword(password);
   } catch (hashErr) {
-    return res.status(500).json({ error: "Erreur de hash du mot de passe" });
+    return res.status(500).json({ error: "Impossible de créer le compte" });
   }
 
   const photoPath = photo ? "/uploads/" + photo.filename : null;
@@ -122,7 +122,7 @@ export const register = async (req, res) => {
             .status(409)
             .json({ error: "Cet email existe déjà. Utilise un autre email." });
         }
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: "Erreur serveur" });
       }
       res.json({ message: "Utilisateur enregistré" });
     },

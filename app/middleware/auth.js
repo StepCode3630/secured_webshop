@@ -16,7 +16,7 @@ export default async function authenticateToken(req, res, next) {
     req.user = payload; //Stock user dans req
     next(); // passe au middleware suivant ou à la route
   } catch (err) {
-    return res.status(403).json({ error: "Token d'authentification invalide" });
+    return res.status(403).json({ error: "Authentification invalide" });
   }
 }
 
@@ -26,7 +26,7 @@ export const adminOnly = (req, res, next) => {
   }
 
   if (req.user.role !== "admin") {
-    return res.status(403).json({ error: "Accès réservé aux administrateurs" });
+    return res.status(403).json({ error: "Access denied" });
   }
   next();
 };

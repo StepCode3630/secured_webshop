@@ -84,6 +84,15 @@ app.get("/administrator", MiddlePot);
 app.use("/api/auth", authRoute);
 app.use("/api/profile", profileRoute);
 
+app.use((err, _req, res, _next) => {
+  console.error("UNEXPECTED ERROR:", err);
+
+  res.status(500).json({
+    code: "UNEXPECTED_ERROR",
+    message: "Une erreur inattendue est survenue",
+  });
+});
+
 // ---------------------------------------------------------------
 // Routes pages (retournent du HTML)
 // ---------------------------------------------------------------

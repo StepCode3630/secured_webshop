@@ -11,9 +11,7 @@ export const get = async (req, res) => {
     console.log("COOKIES:", req.cookies);
     const token = req.cookies.token;
     if (!token) {
-      return res
-        .status(401)
-        .json({ error: "Token d'authentification manquant" });
+      return res.status(401).json({ error: "Authentification invalide" });
     }
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
@@ -35,7 +33,7 @@ export const get = async (req, res) => {
     );
   } catch (err) {
     console.error("PROFILE ERROR:", err);
-    return res.status(401).json({ error: "Token invalide" });
+    return res.status(401).json({ error: "Authentification invalide" });
   }
 };
 
